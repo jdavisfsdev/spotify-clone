@@ -1,12 +1,11 @@
 import NextAuth from 'next-auth';
 import SpotifyProvider from 'next-auth/providers/spotify';
-import { refreshAccessToken } from 'spotify-web-api-node/src/server-methods';
 import spotifyApi, { LOGIN_URL } from '../../../lib/spotify';
 
-const refreshAccessToken = async (token) => {
+async function refreshAccessToken(token) {
   try {
     spotifyApi.setAccessToken(token.accessToken);
-    spotifyApi.refreshAccessToken(token.accessToken);
+    spotifyApi.setRefreshToken(token.refreshToken);
 
     const { body: refreshedToken } = await spotifyApi.refreshAccessToken();
     console.log('REFRESHED TOKEN IS', refreshedToken);
@@ -24,7 +23,7 @@ const refreshAccessToken = async (token) => {
       error: 'RefreshAccessTokenError',
     };
   }
-};
+}
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -64,8 +63,12 @@ export default NextAuth({
     },
 
     // create a session object with token
-    // async session({ session, token }) {
+    async session({ session, token }) {
+      session.user.accessToken = token.accessToken;
+      session.user.refreshToken = token.refreshToken;
+      session.user.username = token.username;
 
-    // }
+      return session;
+    },
   },
 });
