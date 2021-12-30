@@ -10,7 +10,7 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
   //   Allow req if following is true...
-  // 1)If its a req for next auth session
+  // 1) If its a req for next auth session
   // 2) Token exists
   if (pathname.includes('/api/auth') || token) {
     //   NextResponse.next() essentially means carry on, you're good to go
