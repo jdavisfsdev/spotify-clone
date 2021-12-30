@@ -13,6 +13,7 @@ import useSpotify from '../hooks/useSpotify';
 function Sidebar() {
   const { data: session, status } = useSession();
   const [playlists, setPlaylists] = useState([]);
+  const [playlistId, setPlaylistId] = useState(null);
   const spotifyApi = useSpotify();
 
   useEffect(() => {
@@ -63,7 +64,11 @@ function Sidebar() {
         <hr className="border-t-[0.1px] border-gray-900" />
 
         {playlists.map((playlist) => (
-          <p key={playlist.id} className="cursor-pointer hover:text-white">
+          <p
+            onClick={() => setPlaylistId(playlist.id)}
+            key={playlist.id}
+            className="cursor-pointer hover:text-white"
+          >
             {playlist.name}
           </p>
         ))}
